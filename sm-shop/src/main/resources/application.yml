@@ -1,0 +1,77 @@
+application-description: '@project.description@'
+application-version: '@project.version@'
+build:
+  timestamp: '@maven.build.timestamp@'
+logging:
+  level:
+    com:
+      shopizer: INFO
+      zaxxer:
+        hikari:
+          HikariConfig: INFO
+    org:
+      apache:
+        http: ERROR
+      hibernate: ERROR
+      hibernate.SQL: ERROR
+      springframework: ERROR
+management:
+  endpoint:
+    health:
+      show-components: always
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  health:
+    elasticsearch:
+      enabled: false
+    mail:
+      enabled: false
+    ping:
+      enabled: true
+server:
+  error:
+    whitelabel:
+      enabled: false
+  port: 8080
+spring:
+  jpa:
+    hibernate:
+      use-new-id-generator-mappings: true
+    properties:
+      hibernate:
+        default_schema: SALESMANAGER
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      max-file-size: 4MB
+      max-request-size: 10MB
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/ecommerce-backoffice
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+
+jwt:
+  auth:
+    converter:
+      resource-id: springboot-keycloak-client
+      principal-attribute: preferred_username
+
+
+keycloak:
+  authorization-grant-type: password
+  authorization-uri: http://localhost:8180/auth/realms/ecommerce-backoffice/protocol/openid-connect/auth
+  certs-id: R4I2hvgCBDosADvzbmGagBdLyGD-BAzmUoLVol-cLwY
+  client-id: ecommerce-server-client
+  client-secret: YyKuZcjX47eDI44qoDx8qJqYmdWksfVM
+  jwk-set-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/certs
+  logout: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/logout
+  scope: openid, profile
+  token-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/token
+  user-info-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/userinfo

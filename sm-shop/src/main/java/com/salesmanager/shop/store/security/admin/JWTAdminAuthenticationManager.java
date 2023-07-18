@@ -1,10 +1,13 @@
 package com.salesmanager.shop.store.security.admin;
 
-import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.salesmanager.shop.store.security.JWTTokenUtil;
+import com.salesmanager.shop.store.security.KeyCloakTokenUtil;
+import com.salesmanager.shop.store.security.common.CustomAuthenticationException;
+import com.salesmanager.shop.store.security.common.CustomAuthenticationManager;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,12 +16,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import com.salesmanager.shop.store.security.JWTTokenUtil;
-import com.salesmanager.shop.store.security.common.CustomAuthenticationException;
-import com.salesmanager.shop.store.security.common.CustomAuthenticationManager;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.removeStart;
-import io.jsonwebtoken.ExpiredJwtException;
 
 @Component("jwtCustomAdminAuthenticationManager")
 public class JWTAdminAuthenticationManager extends CustomAuthenticationManager {
@@ -28,6 +32,9 @@ public class JWTAdminAuthenticationManager extends CustomAuthenticationManager {
 
   @Inject
   private JWTTokenUtil jwtTokenUtil;
+
+  @Autowired
+  private KeyCloakTokenUtil keyCloakTokenUtil;
 
   @Inject
   private UserDetailsService jwtAdminDetailsService;
@@ -42,9 +49,9 @@ public class JWTAdminAuthenticationManager extends CustomAuthenticationManager {
 
     authToken = ofNullable(requestHeader).map(value -> removeStart(value, BEARER)).map(String::trim)
         .orElseThrow(() -> new CustomAuthenticationException("Missing Authentication Token"));
-
+    //keyCloakTokenUtil.validateToken(authToken);
     try {
-      username = jwtTokenUtil.getUsernameFromToken(authToken);
+      username = keyCloakTokenUtil.getUsernameFromToken(authToken);
     } catch (IllegalArgumentException e) {
       logger.error("an error occured during getting username from token", e);
     } catch (ExpiredJwtException e) {
@@ -65,7 +72,7 @@ public class JWTAdminAuthenticationManager extends CustomAuthenticationManager {
       // For simple validation it is completely sufficient to just check the token integrity. You
       // don't have to call
       // the database compellingly. Again it's up to you ;)
-      if (userDetails != null && jwtTokenUtil.validateToken(authToken, userDetails)) {
+      if (userDetails != null && keyCloakTokenUtil.validateToken(authToken)) {
         authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
             userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
