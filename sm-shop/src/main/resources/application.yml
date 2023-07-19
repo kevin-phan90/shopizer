@@ -65,16 +65,29 @@ jwt:
 
 
 keycloak:
-  authorization-grant-type: password
-  authorization-uri: http://localhost:8180/auth/realms/ecommerce-backoffice/protocol/openid-connect/auth
-  certs-id: R4I2hvgCBDosADvzbmGagBdLyGD-BAzmUoLVol-cLwY
-  client-id: ecommerce-server-client
-  client-secret: YyKuZcjX47eDI44qoDx8qJqYmdWksfVM
-  jwk-set-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/certs
-  logout: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/logout
-  scope: openid, profile
-  token-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/token
-  user-info-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/userinfo
+  backoffice :
+    authorization-grant-type: password
+    authorization-uri: http://localhost:8180/auth/realms/ecommerce-backoffice/protocol/openid-connect/auth
+    certs-id: R4I2hvgCBDosADvzbmGagBdLyGD-BAzmUoLVol-cLwY
+    client-id: ecommerce-server-client
+    client-secret:
+    jwk-set-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/certs
+    logout: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/logout
+    scope: openid, profile
+    token-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/token
+    user-info-uri: http://localhost:8180/realms/ecommerce-backoffice/protocol/openid-connect/userinfo
+  customer :
+    authorization-grant-type: password
+    authorization-uri: http://localhost:8180/auth/realms/ecommerce-customer/protocol/openid-connect/auth
+    certs-id: AMWFxZd3-x_C10FvusNNSiluRje6c3RqxB3Mr28pBY4
+    client-id: ecommerce-server-client
+    client-secret:
+    jwk-set-uri: http://localhost:8180/realms/ecommerce-customer/protocol/openid-connect/certs
+    logout: http://localhost:8180/realms/ecommerce-customer/protocol/openid-connect/logout
+    scope: openid, profile
+    token-uri: http://localhost:8180/realms/ecommerce-customer/protocol/openid-connect/token
+    user-info-uri: http://localhost:8180/realms/ecommerce-customer/protocol/openid-connect/userinfo
+
 
 
 db:
